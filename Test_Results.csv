@@ -1,0 +1,91 @@
+case_id,test_type,input,expected,observed,result,evidence_reference
+T01-before,contract,GET /api/checkout?order_id=150,200,200,PASS,"evidence/contract_before.csv; phase=before; body={""order"":{""order_id"":150,""status"":""paid"",""total_paise"":1156600,""customer_email"":""account0113@example.test"",""invoice_number"":""INV-2026-00150"",""computed_paise"":""1; order_id=150 total=1156600 computed='1156600'"
+T02-before,contract,GET /api/checkout?order_id=99999,404,404,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""not_found""}; "
+T03-before,contract,GET /api/checkout?order_id=invalid,400,400,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""invalid_order_id""}; "
+T04-before,contract,GET /api/paid-orders?date=2026-10-15,200,200,PASS,"evidence/contract_before.csv; phase=before; body={""items"":[{""order_id"":42,""total_paise"":480900,""customer_email"":""account0014@example.test""},{""order_id"":156,""total_paise"":492600,""customer_email"":""account0007@ex; count=7"
+T05-before,contract,GET /api/paid-orders?date=not-a-date,400,500,FAIL,"evidence/contract_before.csv; phase=before; body={""error"":""internal_error""}; "
+T06-before,contract,POST /api/checkout?order_id=150,405,405,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""method_not_allowed""}; "
+T07-before,contract,GET /api/checkout?order_id=150 (no token),401,401,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""unauthorized""}; "
+T08-before,contract,GET /api/checkout?order_id=150%20OR%201=1,400,200,FAIL,"evidence/contract_before.csv; phase=before; body={""order"":{""order_id"":150,""status"":""paid"",""total_paise"":1156600,""customer_email"":""account0113@example.test"",""invoice_number"":""INV-2026-00150"",""computed_paise"":""1; "
+T09-before,contract,GET /api/checkout?order_id=150,200,200,PASS,"evidence/contract_before.csv; phase=before; body={""order"":{""order_id"":150,""status"":""paid"",""total_paise"":1156600,""customer_email"":""account0113@example.test"",""invoice_number"":""INV-2026-00150"",""computed_paise"":""1; p95 assertion evaluated separately in Performance_Benchmarks.csv"
+X01-before,contract-extra,GET /api/checkout?order_id=150 (wrong token),401,401,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""unauthorized""}; "
+X02-before,contract-extra,GET /api/checkout,400,400,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""invalid_order_id""}; "
+X03-before,contract-extra,GET /api/checkout?order_id=-5,400,400,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""invalid_order_id""}; "
+X04-before,contract-extra,GET /api/checkout?order_id=1e3,400,404,FAIL,"evidence/contract_before.csv; phase=before; body={""error"":""not_found""}; "
+X05-before,contract-extra,GET /api/checkout?order_id=99999999999999999999,400,404,FAIL,"evidence/contract_before.csv; phase=before; body={""error"":""not_found""}; "
+X06-before,contract-extra,GET /api/paid-orders?date=2026-02-30,400,500,FAIL,"evidence/contract_before.csv; phase=before; body={""error"":""internal_error""}; "
+X07-before,contract-extra,GET /api/paid-orders,400,500,FAIL,"evidence/contract_before.csv; phase=before; body={""error"":""internal_error""}; "
+X08-before,contract-extra,GET /api/paid-orders?date=2026-10-15%27%20OR%20%271%27=%271,400,200,FAIL,"evidence/contract_before.csv; phase=before; body={""items"":[{""order_id"":42,""total_paise"":480900,""customer_email"":""account0014@example.test""},{""order_id"":156,""total_paise"":492600,""customer_email"":""account0007@ex; count=7"
+X09-before,contract-extra,GET /api/paid-orders?date=2026-01-01,200,200,PASS,"evidence/contract_before.csv; phase=before; body={""items"":[],""count"":0,""duration_ms"":0.316}; count=0"
+X10-before,contract-extra,DELETE /api/paid-orders?date=2026-10-15,405,405,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""method_not_allowed""}; "
+X11-before,contract-extra,GET /api/unknown,404,404,PASS,"evidence/contract_before.csv; phase=before; body={""error"":""not_found""}; "
+X12-before,contract-extra,GET /api/checkout?order_id[]=150,400,200,FAIL,"evidence/contract_before.csv; phase=before; body={""order"":{""order_id"":1,""status"":""paid"",""total_paise"":339200,""customer_email"":""account0081@example.test"",""invoice_number"":""INV-2026-00001"",""computed_paise"":""3392; "
+T01-after,contract,GET /api/checkout?order_id=150,200,200,PASS,"evidence/contract_after.csv; phase=after; body={""order"":{""order_id"":150,""status"":""paid"",""total_paise"":1156600,""customer_email"":""account0113@example.test"",""invoice_number"":""INV-2026-00150"",""computed_paise"":""1; order_id=150 total=1156600 computed='1156600'"
+T02-after,contract,GET /api/checkout?order_id=99999,404,404,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""not_found""}; "
+T03-after,contract,GET /api/checkout?order_id=invalid,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+T04-after,contract,GET /api/paid-orders?date=2026-10-15,200,200,PASS,"evidence/contract_after.csv; phase=after; body={""items"":[{""order_id"":42,""total_paise"":480900,""customer_email"":""account0014@example.test""},{""order_id"":156,""total_paise"":492600,""customer_email"":""account0007@ex; count=7"
+T05-after,contract,GET /api/paid-orders?date=not-a-date,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_date""}; "
+T06-after,contract,POST /api/checkout?order_id=150,405,405,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""method_not_allowed""}; "
+T07-after,contract,GET /api/checkout?order_id=150 (no token),401,401,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""unauthorized""}; "
+T08-after,contract,GET /api/checkout?order_id=150%20OR%201=1,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+T09-after,contract,GET /api/checkout?order_id=150,200,200,PASS,"evidence/contract_after.csv; phase=after; body={""order"":{""order_id"":150,""status"":""paid"",""total_paise"":1156600,""customer_email"":""account0113@example.test"",""invoice_number"":""INV-2026-00150"",""computed_paise"":""1; p95 assertion evaluated separately in Performance_Benchmarks.csv"
+X01-after,contract-extra,GET /api/checkout?order_id=150 (wrong token),401,401,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""unauthorized""}; "
+X02-after,contract-extra,GET /api/checkout,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+X03-after,contract-extra,GET /api/checkout?order_id=-5,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+X04-after,contract-extra,GET /api/checkout?order_id=1e3,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+X05-after,contract-extra,GET /api/checkout?order_id=99999999999999999999,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+X06-after,contract-extra,GET /api/paid-orders?date=2026-02-30,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_date""}; "
+X07-after,contract-extra,GET /api/paid-orders,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_date""}; "
+X08-after,contract-extra,GET /api/paid-orders?date=2026-10-15%27%20OR%20%271%27=%271,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_date""}; "
+X09-after,contract-extra,GET /api/paid-orders?date=2026-01-01,200,200,PASS,"evidence/contract_after.csv; phase=after; body={""items"":[],""count"":0,""truncated"":false,""duration_ms"":0.475}; count=0"
+X10-after,contract-extra,DELETE /api/paid-orders?date=2026-10-15,405,405,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""method_not_allowed""}; "
+X11-after,contract-extra,GET /api/unknown,404,404,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""not_found""}; "
+X12-after,contract-extra,GET /api/checkout?order_id[]=150,400,400,PASS,"evidence/contract_after.csv; phase=after; body={""error"":""invalid_order_id""}; "
+U01-after,unit,orderId accepts 150,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U02-after,unit,orderId accepts INT max,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.00-after,unit,orderId rejects '',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.01-after,unit,orderId rejects '0',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.02-after,unit,orderId rejects '-5',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.03-after,unit,orderId rejects '007',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.04-after,unit,orderId rejects '1e3',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.05-after,unit,orderId rejects '150 OR 1=1',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.06-after,unit,orderId rejects '150abc',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.07-after,unit,orderId rejects ' 150',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.08-after,unit,orderId rejects '1.5',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.09-after,unit,orderId rejects '2147483648',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U03.10-after,unit,orderId rejects '99999999999',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U04-after,unit,orderId rejects array input,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U05-after,unit,orderId rejects missing,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U06-after,unit,dayRange half-open range,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U07-after,unit,dayRange crosses year end,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U08-after,unit,dayRange accepts leap day,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.00-after,unit,dayRange rejects 'not-a-date',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.01-after,unit,dayRange rejects '2026-02-30',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.02-after,unit,dayRange rejects '2026-13-01',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.03-after,unit,dayRange rejects '2026-1-5',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.04-after,unit,dayRange rejects '15-10-2026',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.05-after,unit,dayRange rejects '2026-10-15' OR '1'='1',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.06-after,unit,dayRange rejects '2026-10-15T00:00',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.07-after,unit,dayRange rejects '0000-01-01',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U09.08-after,unit,dayRange rejects '',PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U10-after,unit,dayRange rejects array input,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U11-after,unit,POST -> 405 + Allow: GET,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U12-after,unit,missing token -> 401,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U13-after,unit,wrong token -> 401,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U14-after,unit,unset server token never authorises,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U15-after,unit,unknown route -> 404,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U16-after,unit,bad order_id -> 400 invalid_order_id,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U17-after,unit,bad date -> 400 invalid_date,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U18-after,unit,no DB connection opened for rejected requests,PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+U19-after,unit,"DB failure -> 500 internal_error, no leak",PASS,PASS,PASS,refactored-php/tests/UnitTest.php (php tests/UnitTest.php)
+S01-after,static/PSR-12,phpcs 4.0.4 --standard=PSR12 public src tests,0 errors 0 warnings,0 errors 0 warnings,PASS,phpcs exit code 0
+S02-before,static/PSR-12,phpcs --standard=PSR12 on supplied starter public src,0 errors,violations found (104 auto-fixable),FAIL,baseline starter code
+S03-after,static/lint,php -l (PHP 8.3.36) on all refactored .php files,no syntax errors,no syntax errors,PASS,php -l
+F01,fixture,INPUT_FILES/tests/fixture_integrity.py,Fixture integrity OK,"Fixture integrity OK: 600 orders, 1476 items, 600 invoices",PASS,supplied script
+SEC01-after,security/least-privilege,UPDATE orders as billing_api_ro,denied (ERROR 1142),ERROR 1142 (42000) at line 1: UPDATE command denied to user 'billing_api_ro'@'localhost' for table 'orders',PASS,mysql client output
+SEC02-after,security/least-privilege,DROP TABLE invoices as billing_api_ro,denied,ERROR 1142 (42000) at line 1: DROP command denied to user 'billing_api_ro'@'localhost' for table 'invoices',PASS,mysql client output
+MIG01,migration/idempotency,re-run optimize.sql on already-optimised DB,"3 indexes skipped, no error",3 skipped,PASS,mysql output
+MIG02,migration/non-destructive,column count in vijay_billing after optimize.sql,22 (3+3+5+5+6 columns defined in schema.sql),22,PASS,information_schema.columns
+EQ01,query equivalence,"paid orders per day: DATE(created_at)=d vs half-open range, every distinct date",diff=0 on both datasets,vijay_billing days=42 orig=360 new=360 diff=0;vijay_billing_scale days=730 orig=300029 new=300029 diff=0;,PASS,SQL set comparison
+T09-p95-before,latency,"GET /api/checkout?order_id=150, 5 warmups + 30 measured x3 runs (90 samples)",p95 < 180 ms,p95 0.522 ms (p50 0.433 ms),PASS,Performance_Benchmarks.csv
+T09-p95-after,latency,"GET /api/checkout?order_id=150, 5 warmups + 30 measured x3 runs (90 samples)",p95 < 180 ms,p95 0.601 ms (p50 0.370 ms),PASS,Performance_Benchmarks.csv

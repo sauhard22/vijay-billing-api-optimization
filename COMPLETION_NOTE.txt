@@ -1,0 +1,41 @@
+COMPLETION NOTE
+Job ID: rkGmI2UioRXvzqgpCOEH   Client: Vijay Mishra   Task: Checkout PHP/MySQL optimisation
+Completed: 18-11-2026 (deadline 19-11-2026)
+
+SOURCE REPOSITORY: https://github.com/sauhard22/vijay-billing-api-optimization
+
+DELIVERABLES IN THIS FOLDER
+  Bottleneck_Analysis.pdf       Q1-Q3 slow paths, baseline EXPLAIN evidence, index choices, risks, before/after numbers
+  Technical_Change_Summary.pdf  Code changes, compatibility, security protections, observed results
+                                (the spec also calls this "Technical_Summary.pdf")
+  optimize.sql                  Non-destructive, idempotent, commented index migration + rewritten read queries
+  refactored-php/               Refactored endpoint/repository source (PSR-12), unit tests, least-privilege SQL, README
+                                (.env excluded)
+  EXPLAIN_Before_After.txt      Actual EXPLAIN + EXPLAIN ANALYZE plans and the commands used, before and after,
+                                for Q1-Q3 and both endpoint queries
+  Performance_Benchmarks.csv    Every measured HTTP and SQL latency sample, p50/p95 summaries, environment,
+                                and rows marking tests that were NOT run
+  Test_Results.csv              Contract (before and after), unit, PSR-12, lint, fixture, security, migration and
+                                equivalence checks with expected and observed values
+  EXPLAIN_And_Latency_Log.csv   Filled-in EXPLAIN_AND_LATENCY_LOG template (Q1-Q3, seed and scale datasets)
+  benchmark-tools/              Scripts used to produce the numbers (contract runner, HTTP/SQL benchmarks,
+                                EXPLAIN scripts, synthetic scale-data generator)
+  (The spec's "Test_And_Latency_Results.csv" content is in Test_Results.csv + Performance_Benchmarks.csv.)
+
+FINAL VALIDATION STATUS (all results come from real local runs)
+  Contract cases:  before 13/21 pass  ->  after 21/21 pass (9 supplied + 12 extra from the test guidelines)
+  Unit tests:      37/37 pass.  PSR-12 (phpcs 4.0.4): 0 errors, 0 warnings.  php -l: clean.
+  Responses:       byte-identical to the original for all 42 seed dates and 3 sample orders
+                   (excluding duration_ms and the new additive "truncated" field)
+  p95 < 180 ms:    PASS. Supplied dataset: checkout 0.601 ms, paid-orders 0.396 ms (90 samples each).
+                   Synthetic 500k-order dataset: paid-orders 65.2 ms -> 0.867 ms.
+  SQL p95 at 500k orders: Q1 63.2 -> 0.78 ms, Q2 3,315 -> 300 ms, Q3 66.0 -> 0.085 ms.
+
+LIMITATIONS / BLOCKERS
+  1. Environment: Docker is not installed on the test machine. With client approval, all tests ran on
+     native Homebrew PHP 8.3.36 + MySQL 8.0.46 (Apple M5 Pro, macOS 26.7.1), not in the supplied
+     Docker Compose stack. The updated docker-compose.yml was NOT executed.
+  2. On the supplied 600-order dataset the original code already met the 180 ms target. The timeout
+     could not be reproduced at that size, so the index gains are shown on a clearly labelled synthetic
+     500k-order dataset with the same schema.
+  3. Not run: concurrent/load testing, production or staging measurement, index write-overhead benchmark.

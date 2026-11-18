@@ -1,0 +1,33 @@
+# Same stack as the supplied starter. Changes: optimize.sql is applied at first
+# DB start (03_optimize.sql), and DB_PORT / DB_USER are passed through from .env.
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-local_only_root}
+      MYSQL_DATABASE: vijay_billing
+      MYSQL_USER: billing_app
+      MYSQL_PASSWORD: ${DB_PASSWORD:-local_only_password}
+    volumes:
+      - ../db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ../db/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+      - ../optimize.sql:/docker-entrypoint-initdb.d/03_optimize.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  api:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: vijay_billing
+      DB_USER: ${DB_USER:-billing_app}
+      DB_PASSWORD: ${DB_PASSWORD:-local_only_password}
+      API_ACCESS_TOKEN: ${API_ACCESS_TOKEN:-local_testing_only_change_me}
+    ports:
+      - "127.0.0.1:8087:8080"
+    depends_on:
+      db:
+        condition: service_healthy
